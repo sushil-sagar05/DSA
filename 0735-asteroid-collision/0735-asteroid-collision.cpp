@@ -8,19 +8,16 @@ public:
             if (asteroids[i] > 0) {
                 st.push(asteroids[i]);
             } else {
-                while (!st.empty() && st.top() > 0) {
-                    if (abs(st.top()) < abs(asteroids[i])) {
-                        st.pop();
-                    } else if (abs(st.top()) == abs(asteroids[i])) {
-                        st.pop();
-                        goto skipPush;
-                    } else {
-                        goto skipPush;
-                    }
+                   while(!st.empty() && st.top()>0 && abs(st.top())<abs(asteroids[i])){
+                    st.pop();
                 }
-                st.push(asteroids[i]);
+                if(!st.empty() && abs(asteroids[i])==st.top()){
+                    st.pop();
+                }
+                else if(st.empty() || st.top()<0){
+                    st.push(asteroids[i]);
+                }
             }
-            skipPush:;
         }
 
         stack<int> temp;

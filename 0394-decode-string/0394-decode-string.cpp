@@ -1,38 +1,58 @@
+#include <stack>
+#include <string>
+
+using namespace std;
+
 class Solution {
 public:
     string decodeString(string s) {
-        stack<int> numberStack;
+        stack<int> numStack;
         stack<string> stringStack;
         int k = 0;
-        string currentString = ""; 
         
-        for (char ch : s) {
-            if (isdigit(ch)) {
-                k = k * 10 + (ch - '0');
-            } 
-            else if (ch == '[') {
-                numberStack.push(k);
-                k = 0;
-                stringStack.push(currentString);
-                currentString = "";
-            } 
-            else if (ch == ']') {
-                string temp = currentString;
-                currentString = stringStack.top();
-                stringStack.pop();
-                
-                int count = numberStack.top();
-                numberStack.pop();
-                
-                for (int j = 0; j < count; j++) {
-                    currentString += temp;
-                }
-            } 
-            else {
-                currentString += ch;
+        for (char c : s) {
+            if (isdigit(c)) {
+                k = (k * 10) + (c - '0');
+                continue;
             }
+            
+            if (c == '[') {
+                numStack.push(k);
+                k = 0;
+                stringStack.push("[");
+                continue;
+            }
+            
+            if (c != ']') {
+                stringStack.push(string(1, c));
+                continue;
+            }
+            
+            string temp;
+            while (!stringStack.empty() && stringStack.top() != "[") {
+                temp = stringStack.top() + temp;
+                stringStack.pop();
+            }
+            
+            stringStack.pop();
+            
+            int count = numStack.top();
+            numStack.pop();
+            
+            string replacement;
+            for (int i = 0; i < count; i++)
+                replacement += temp;
+            
+            stringStack.push(replacement);
         }
         
-        return currentString;
+        string result;
+        while (!stringStack.empty()) {
+            result = stringStack.top() + result;
+            stringStack.pop();
+        }
+        
+        return result;
     }
 };
+

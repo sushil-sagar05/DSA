@@ -11,20 +11,27 @@
  */
 class Solution {
 public:
-    string traverse(TreeNode* root){
-        if(root==NULL){
-            return "#";
+    bool isSame(TreeNode* root,TreeNode* subRoot){
+        if(root==NULL && subRoot==NULL){
+            return true;
         }
-        string st;
-        st.append(to_string(root->val));
-        st.append(",");
-        st.append(traverse(root->left));
-        st.append(traverse(root->right));
-        return st;
+        if(root==NULL || subRoot==NULL){
+            return false;
+        }
+        if(root->val!=subRoot->val){
+            return false;
+        }
+       if (isSame(root->left,subRoot->left)&& isSame(root->right,subRoot->right)){
+        return true;
+       }
+       return false;
     }
     bool isSubtree(TreeNode* root, TreeNode* subRoot) {
-      string FullTree=traverse(root);
-      string SubTree=traverse(subRoot);
-     return FullTree.find(SubTree) != string::npos;
-    }    
+       if(root==NULL) return false;
+       if(isSame(root,subRoot))return true;
+       if(isSame(root->left,subRoot)|| isSame(root->right,subRoot)){
+        return true;
+       }
+       return false;
+    }
 };

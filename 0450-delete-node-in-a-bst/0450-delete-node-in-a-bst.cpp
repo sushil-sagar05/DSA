@@ -11,51 +11,48 @@
  */
 class Solution {
 public:
-    int Height(TreeNode* root){
-        if(root==NULL){
-            return 0;
+    TreeNode* findLastRight(TreeNode* root){
+        if(root->right==NULL){
+            return root;
         }
-        int left = Height(root->left);
-        int right = Height(root->right);
-        return max(left,right)+1;
+        return findLastRight(root->right);
     }
-    TreeNode* InPre(TreeNode* p){
-        while(p&&p->right!=NULL){
-           p=p->right; 
+    TreeNode* helper(TreeNode* root){
+        if(root->left==NULL){
+            return root->right;
+        }else if(root->right==NULL){
+            return root->left;
         }
-        return p;
-    }
-    TreeNode* InSucc(TreeNode* p){
-         while(p&&p->left!=NULL){
-           p=p->left; 
-        }
-        return p;
+        TreeNode* rightChild=root->right;
+        TreeNode* lastRight=findLastRight(root->left);
+        lastRight->right=rightChild;
+        return root->left;
     }
     TreeNode* deleteNode(TreeNode* root, int key) {
-        TreeNode*q;
         if(root==NULL){
             return NULL;
         }
-        if(key<root->val){
-            root->left=deleteNode(root->left,key);
-        }else if(key>root->val){
-            root->right=deleteNode(root->right,key);
-        } else{
-             if(root->right==NULL && root->left==NULL){
-            delete(root);
-            return NULL;
-        }else if(root->left&&root->right){
-            if(Height(root->left)>Height(root->right)){
-                q=InPre(root->left);
-                root->val=q->val;
-                root->left=deleteNode(root->left,q->val);
-            }else{
-                q=InSucc(root->right);
-                root->val=q->val;
-                root->right=deleteNode(root->right,q->val);
+        if(root->val==key){
+            return helper(root);
+        }
+        TreeNode* dummy=root;
+        while(root!=NULL){
+            if(root->val>key){
+                if(root->left!=NULL && root->left->val==key){
+                    root->left=helper(root->left);
+                    break;
+                }else{
+                    root=root->left;
+                }
+            }else {
+                if(root->right!=NULL && root->right->val==key){
+                    root->right=helper(root->right);
+                    break;
+                }else{
+                    root=root->right;
+                }
             }
         }
-        }
-        return root;
+        return dummy;
     }
 };

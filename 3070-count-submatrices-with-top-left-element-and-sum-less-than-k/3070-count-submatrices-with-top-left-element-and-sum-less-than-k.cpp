@@ -5,11 +5,11 @@ public:
         psum=grid;
         int n=grid.size();
         int m=grid[0].size();
-        for(int j = 1; j < m; j++) {
-            psum[0][j] += psum[0][j - 1];
+        for(int j=1;j<m;j++) {
+            psum[0][j]+=psum[0][j-1];
         }
-        for(int i = 1; i < n; i++) {
-            psum[i][0] += psum[i - 1][0];
+        for(int i=1;i<n;i++) {
+            psum[i][0]+=psum[i-1][0];
         }
         for(int i=1;i<n;i++){
             for(int j=1;j<m;j++){
